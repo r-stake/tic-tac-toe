@@ -20,7 +20,7 @@
       }
     };
 
-    // Update array values
+    // Function for adding player markers to the gameboard array
     function updateArray(event, marker) {
       const dataIndex = event.getAttribute("data-index");
       if (gameboard[dataIndex] === "") {
@@ -42,12 +42,12 @@
 
   const playerOne = Player("Mr. Pink", "X");
   const playerTwo = Player("Mr. Yellow", "O");
-  console.log(playerOne);
-  console.log(playerTwo);
-  console.log(playerOne.getPlayerName());
-  console.log(playerOne.mark);
-  console.log(playerTwo.getPlayerName());
+      console.log(playerOne);
+      console.log(playerTwo);
+      console.log(playerOne.getPlayerName());
+      console.log(playerTwo.getPlayerName());
 
+  // Module for game management
   const game = (() => {
     // let gameWon = false;
     let currentPlayer = playerOne;
@@ -60,6 +60,7 @@
       }
     }
     
+    // Function used for adding players mark to the HTML elements and the gameboard array
     function addMark(item) {
       const currentPlayerMarker = currentPlayer.getPlayerMarker();
 
@@ -67,22 +68,22 @@
         item.textContent = currentPlayerMarker;
         trackCurrentPlayer();
         gameBoard.updateArray(item, currentPlayerMarker);
-        console.log(gameBoard.gameboard);
+
+            console.log(gameBoard.gameboard);
       }
     }
 
+    // Function used to initialize new game
     function startGame() {
       // Display empty board for a new game
       gameBoard.renderBoard();
       // Create event listener for adding marks to the board when the corresponding html element is clicked
       gameboardElementArray.forEach(item => {
-        item.addEventListener("click", () => game.addMark(item));
+        item.addEventListener("click", () => addMark(item));
       });
     }
 
     startGame();
-
-    return {addMark}
 
   })();
 
