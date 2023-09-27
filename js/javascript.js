@@ -3,6 +3,8 @@
   const gameboardElementArray = document.querySelectorAll(".gameboard div");
   const gameBoardCell = document.querySelector(".gameboard div");
 
+
+
   // Create object to store the gameboard array and functions for displaying gameboard and changing arrays values
 
   const gameBoard = (() => {
@@ -39,19 +41,26 @@
     return {board, updateArray, renderBoard};
   })();
 
+
+
   // Factory function for creating players
-  const Player = (name, marker) => {
+  const Player = (name, marker, identifier) => {
+    const getPlayerIdentifier = () => identifier;
     const getPlayerName = () => name;
     const getPlayerMarker = () => marker;
-    return {getPlayerMarker, getPlayerName}
+    return {getPlayerMarker, getPlayerName, getPlayerIdentifier}
   };
 
-  const playerOne = Player("Mr. Pink", "X");
-  const playerTwo = Player("Mr. Yellow", "O");
+
+
+  const playerOne = Player("Mr. Pink", "X", "player-one");
+  const playerTwo = Player("Mr. Yellow", "O", "player-two");
       console.log(playerOne);
       console.log(playerTwo);
       console.log(playerOne.getPlayerName());
       console.log(playerTwo.getPlayerName());
+
+
 
   // Module for game management
   const game = (() => {
@@ -72,16 +81,19 @@
 
       if (item.textContent === "") {
         item.textContent = currentPlayerMarker;
+        item.classList.add(`${currentPlayer.getPlayerIdentifier()}`);
+        
         trackCurrentPlayer();
         gameBoard.updateArray(item, currentPlayerMarker);
 
             console.log(gameBoard.board);
+            console.log(item);
       }
     }
 
     // Function used to initialize new game
     function startGame() {
-      // Display empty board for a new game
+      
       gameBoard.renderBoard();
       // Create event listener for adding marks to the board when the corresponding html element is clicked
       gameboardElementArray.forEach(item => {
