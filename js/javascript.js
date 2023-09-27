@@ -1,36 +1,42 @@
 (() => {
   // Cache DOM elements
   const gameboardElementArray = document.querySelectorAll(".gameboard div");
+  const gameBoardCell = document.querySelector(".gameboard div");
 
   // Create object to store the gameboard array and functions for displaying gameboard and changing arrays values
+
   const gameBoard = (() => {
 
-    // Create gameboard array
-    const gameboard = [];
+    const rows = 3;
+    const columns = 3;
+    const board = [];
 
-    // Function for populating gameboard array with empty values
-    function populateArray(location) {
-      gameboard.push(location.textContent)
-    };
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push("");
+      }
+    }
 
-    // Function for displaying gameboard array values on the DOM
+    // Function for displaying board array values on the DOM
     function renderBoard() {
-      for (i = 0; i < gameboardElementArray.length; i++) {
-        gameboardElementArray[i].textContent = gameBoard.gameboard[i];
+      for (k = 0; k < gameboardElementArray.length; k++) {
+        const i = Math.floor(k / columns);
+        const j = k % columns;
+        gameboardElementArray[k].textContent = board[i][j];
       }
     };
 
     // Function for adding player markers to the gameboard array
     function updateArray(event, marker) {
-      const dataIndex = event.getAttribute("data-index");
-      if (gameboard[dataIndex] === "") {
-        gameboard[dataIndex] = marker;
+      const dataRow = event.getAttribute("data-row");
+      const dataColumn = event.getAttribute("data-column");
+      if (board[dataRow][dataColumn] === "") {
+        board[dataRow][dataColumn] = marker;
       }
     };
 
-    gameboardElementArray.forEach(item => populateArray(item));
-
-    return {gameboard, updateArray, renderBoard};
+    return {board, updateArray, renderBoard};
   })();
 
   // Factory function for creating players
@@ -69,7 +75,7 @@
         trackCurrentPlayer();
         gameBoard.updateArray(item, currentPlayerMarker);
 
-            console.log(gameBoard.gameboard);
+            console.log(gameBoard.board);
       }
     }
 
