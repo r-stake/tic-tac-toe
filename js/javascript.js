@@ -82,18 +82,53 @@
       if (item.textContent === "") {
         item.textContent = currentPlayerMarker;
         item.classList.add(`${currentPlayer.getPlayerIdentifier()}`);
-        
-        trackCurrentPlayer();
         gameBoard.updateArray(item, currentPlayerMarker);
+        checkForGameOver(currentPlayer);
 
+        trackCurrentPlayer();
             console.log(gameBoard.board);
             console.log(item);
       }
     }
 
+    // Function for checking if the game is over
+    function checkForGameOver(player) {
+      const playerMark = player.getPlayerMarker();
+      console.log(playerMark);
+      // Check for three in a row horizontally, vertically, or diagonally
+      for (let i = 0; i < 3; i++) {
+        // Horizontal check
+        if (
+          gameBoard.board[i][0] === playerMark && 
+          gameBoard.board[i][1] === playerMark && gameBoard.board[i][2] === playerMark
+        ) {
+          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+        }
+
+        // Vertical check
+        if (
+          gameBoard.board[0][i] === playerMark && 
+          gameBoard.board[1][i] === playerMark && gameBoard.board[2][i] === playerMark
+        ) {
+          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+        }
+
+        // Diagonal check
+        if ((
+            gameBoard.board[0][i] === playerMark && 
+            gameBoard.board[1][i + 1] === playerMark && gameBoard.board[2][i + 2] === playerMark
+          ) ||
+          (
+            gameBoard.board[0][i] === playerMark && 
+            gameBoard.board[1][i - 1] === playerMark && gameBoard.board[2][i - 2] === playerMark
+          )) {
+            console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+          }
+      }  
+    }
+
     // Function used to initialize new game
     function startGame() {
-      
       gameBoard.renderBoard();
       // Create event listener for adding marks to the board when the corresponding html element is clicked
       gameboardElementArray.forEach(item => {
@@ -101,8 +136,10 @@
       });
     }
 
-    startGame();
+    return {startGame};
 
   })();
+
+  game.startGame();
 
 })();
