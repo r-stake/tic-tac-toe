@@ -1,8 +1,6 @@
 (() => {
   // Cache DOM elements
   const gameboardElementArray = document.querySelectorAll(".gameboard div");
-  const gameBoardCell = document.querySelector(".gameboard div");
-
 
 
   // Create object to store the gameboard array and functions for displaying gameboard and changing arrays values
@@ -30,11 +28,12 @@
     };
 
     // Function for adding player markers to the gameboard array
-    function updateArray(event, marker) {
+    function updateArray(event) {
       const dataRow = event.getAttribute("data-row");
       const dataColumn = event.getAttribute("data-column");
       if (board[dataRow][dataColumn] === "") {
-        board[dataRow][dataColumn] = marker;
+
+        board[dataRow][dataColumn] = currentPlayer.getPlayerMarker();
       }
     };
 
@@ -55,17 +54,14 @@
 
   const playerOne = Player("Mr. Pink", "X", "player-one");
   const playerTwo = Player("Mr. Yellow", "O", "player-two");
-      console.log(playerOne);
-      console.log(playerTwo);
-      console.log(playerOne.getPlayerName());
-      console.log(playerTwo.getPlayerName());
 
+  let currentPlayer = playerOne;
 
 
   // Module for game management
   const game = (() => {
-    // let gameWon = false;
-    let currentPlayer = playerOne;
+
+    
 
     function trackCurrentPlayer() {
       if (currentPlayer === playerOne) {
@@ -77,15 +73,12 @@
     
     // Function used for adding players mark to the HTML elements and the gameboard array
     function addMark(item) {
-      const currentPlayerMarker = currentPlayer.getPlayerMarker();
 
       if (item.textContent === "") {
+        const currentPlayerMarker = currentPlayer.getPlayerMarker();
         item.textContent = currentPlayerMarker;
         item.classList.add(`${currentPlayer.getPlayerIdentifier()}`);
-        gameBoard.updateArray(item, currentPlayerMarker);
-        checkForGameOver(currentPlayer);
-
-        trackCurrentPlayer();
+        
             console.log(gameBoard.board);
             console.log(item);
       }
@@ -94,9 +87,19 @@
     // Function for checking if the game is over
     function checkForGameOver(player) {
       const playerMark = player.getPlayerMarker();
-      console.log(playerMark);
+
+      // Check for a tie
+      const noLegalMoves = Array.from(gameboardElementArray).every(element => {
+        return element.textContent !== "";
+      });
+
+      if (noLegalMoves) {
+        console.log(`It's a tie!`);
+      }
+
       // Check for three in a row horizontally, vertically, or diagonally
       for (let i = 0; i < 3; i++) {
+        
         // Horizontal check
         if (
           gameBoard.board[i][0] === playerMark && 
@@ -113,26 +116,37 @@
           console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
         }
 
-        // Diagonal check
-        if ((
-            gameBoard.board[0][i] === playerMark && 
-            gameBoard.board[1][i + 1] === playerMark && gameBoard.board[2][i + 2] === playerMark
-          ) ||
-          (
-            gameBoard.board[0][i] === playerMark && 
-            gameBoard.board[1][i - 1] === playerMark && gameBoard.board[2][i - 2] === playerMark
-          )) {
-            console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
-          }
+        // Diagonal check (top-left to bottom-right)
+        if (
+          gameBoard.board[0][i] === playerMark && 
+          gameBoard.board[1][i + 1] === playerMark && gameBoard.board[2][i + 2] === playerMark
+        ) {
+          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+        }
+        
+        // Diagonal check (top-right to bottom-left)
+        if (
+          gameBoard.board[0][i] === playerMark && 
+          gameBoard.board[1][i - 1] === playerMark && gameBoard.board[2][i - 2] === playerMark
+        ) {
+          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+        }
       }  
     }
 
     // Function used to initialize new game
     function startGame() {
+
       gameBoard.renderBoard();
-      // Create event listener for adding marks to the board when the corresponding html element is clicked
+
+      // Create event listener for clicking the gameboard
       gameboardElementArray.forEach(item => {
-        item.addEventListener("click", () => addMark(item));
+        item.addEventListener("click", () => {
+          addMark(item);
+          gameBoard.updateArray(item);
+          checkForGameOver(currentPlayer);
+          trackCurrentPlayer();
+        });
       });
     }
 
