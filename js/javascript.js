@@ -88,15 +88,6 @@
     function checkForGameOver(player) {
       const playerMark = player.getPlayerMarker();
 
-      // Check for a tie
-      const noLegalMoves = Array.from(gameboardElementArray).every(element => {
-        return element.textContent !== "";
-      });
-
-      if (noLegalMoves) {
-        console.log(`It's a tie!`);
-      }
-
       // Check for three in a row horizontally, vertically, or diagonally
       for (let i = 0; i < 3; i++) {
         
@@ -105,7 +96,7 @@
           gameBoard.board[i][0] === playerMark && 
           gameBoard.board[i][1] === playerMark && gameBoard.board[i][2] === playerMark
         ) {
-          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+          return currentPlayer;
         }
 
         // Vertical check
@@ -113,7 +104,7 @@
           gameBoard.board[0][i] === playerMark && 
           gameBoard.board[1][i] === playerMark && gameBoard.board[2][i] === playerMark
         ) {
-          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+          return currentPlayer;
         }
 
         // Diagonal check (top-left to bottom-right)
@@ -121,7 +112,7 @@
           gameBoard.board[0][i] === playerMark && 
           gameBoard.board[1][i + 1] === playerMark && gameBoard.board[2][i + 2] === playerMark
         ) {
-          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+          return currentPlayer;
         }
         
         // Diagonal check (top-right to bottom-left)
@@ -129,9 +120,26 @@
           gameBoard.board[0][i] === playerMark && 
           gameBoard.board[1][i - 1] === playerMark && gameBoard.board[2][i - 2] === playerMark
         ) {
-          console.log(`Congratulations, ${currentPlayer.getPlayerName()} wins!`);
+          return currentPlayer;
         }
       }  
+
+      // Check for a tie
+      const noLegalMoves = Array.from(gameboardElementArray).every(element => {
+        return element.textContent !== "";
+      });
+
+      if (noLegalMoves) {
+        return `tie`;
+      }
+    }
+
+    function announceWinner(winner) {
+      if (winner === "tie") {
+        console.log(`The game ended in a tie.`);
+      } else {
+        console.log(`Congratulations, ${winner.getPlayerName()} has won!`);
+      }
     }
 
     // Function used to initialize new game
@@ -144,7 +152,11 @@
         item.addEventListener("click", () => {
           addMark(item);
           gameBoard.updateArray(item);
-          checkForGameOver(currentPlayer);
+          let winner = checkForGameOver(currentPlayer);
+          if (winner) {
+            announceWinner(winner);
+            
+          }
           trackCurrentPlayer();
         });
       });
