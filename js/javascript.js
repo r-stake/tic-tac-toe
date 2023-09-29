@@ -155,7 +155,7 @@
           let winner = checkForGameOver(currentPlayer);
           if (winner) {
             announceWinner(winner);
-            
+
           }
           trackCurrentPlayer();
         });
@@ -164,6 +164,26 @@
 
     return {startGame};
 
+  })();
+
+  // Module for event handler functions
+  const eventHandler = (() => {
+
+    // Function to add event listeners for clicking the gameboard
+    function addEventListeners() {
+      gameboardElementArray.forEach(item => {
+        item.addEventListener("click", handleClick);
+      });
+    }
+
+    // Function to remove event listeners from the gameboard
+    function removeEventListeners() {
+      gameboardElementArray.forEach(item => {
+        item.removeEventListener("click", handleClick);
+      });
+    }
+
+    
   })();
 
   game.startGame();
