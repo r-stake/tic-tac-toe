@@ -61,8 +61,6 @@
   // Module for game management
   const game = (() => {
 
-    
-
     function trackCurrentPlayer() {
       if (currentPlayer === playerOne) {
         currentPlayer = playerTwo;
@@ -73,7 +71,6 @@
     
     // Function used for adding players mark to the HTML elements and the gameboard array
     function addMark(item) {
-
       if (item.textContent === "") {
         const currentPlayerMarker = currentPlayer.getPlayerMarker();
         item.textContent = currentPlayerMarker;
@@ -144,25 +141,11 @@
 
     // Function used to initialize new game
     function startGame() {
-
       gameBoard.renderBoard();
-
-      // Create event listener for clicking the gameboard
-      gameboardElementArray.forEach(item => {
-        item.addEventListener("click", () => {
-          addMark(item);
-          gameBoard.updateArray(item);
-          let winner = checkForGameOver(currentPlayer);
-          if (winner) {
-            announceWinner(winner);
-
-          }
-          trackCurrentPlayer();
-        });
-      });
+      eventHandler.addEventListeners();
     }
 
-    return {startGame};
+    return {trackCurrentPlayer, addMark, checkForGameOver, announceWinner, startGame};
 
   })();
 
@@ -183,7 +166,20 @@
       });
     }
 
-    
+    function handleClick(event) {
+      const item = event.target;
+      game.addMark(item);
+      gameBoard.updateArray(item);
+      let winner = game.checkForGameOver(currentPlayer);
+      if (winner) {
+        game.announceWinner(winner);
+        removeEventListeners();
+      }
+      game.trackCurrentPlayer();
+    }
+
+    return {addEventListeners, removeEventListeners, handleClick}
+
   })();
 
   game.startGame();
