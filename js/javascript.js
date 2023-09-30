@@ -103,23 +103,25 @@
         ) {
           return currentPlayer;
         }
-
-        // Diagonal check (top-left to bottom-right)
-        if (
-          gameBoard.board[0][i] === playerMark && 
-          gameBoard.board[1][i + 1] === playerMark && gameBoard.board[2][i + 2] === playerMark
-        ) {
-          return currentPlayer;
-        }
-        
-        // Diagonal check (top-right to bottom-left)
-        if (
-          gameBoard.board[0][i] === playerMark && 
-          gameBoard.board[1][i - 1] === playerMark && gameBoard.board[2][i - 2] === playerMark
-        ) {
-          return currentPlayer;
-        }
       }  
+
+      // Diagonal check (top-left to bottom-right)
+      if (
+        gameBoard.board[0][0] === playerMark && 
+        gameBoard.board[1][1] === playerMark && 
+        gameBoard.board[2][2] === playerMark
+      ) {
+        return currentPlayer;
+      }
+      
+      // Diagonal check (top-right to bottom-left)
+      if (
+        gameBoard.board[0][2] === playerMark && 
+        gameBoard.board[1][1] === playerMark && 
+        gameBoard.board[2][0] === playerMark
+      ) {
+        return currentPlayer;
+      }
 
       // Check for a tie
       const noLegalMoves = Array.from(gameboardElementArray).every(element => {
