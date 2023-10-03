@@ -1,6 +1,6 @@
 (() => {
   // Cache DOM elements
-  const gameboardElementArray = document.querySelectorAll(".gameboard div");
+  const gameboardElementArray = document.querySelectorAll(".gameboard button");
   const paraVictoryMessage = document.querySelector(".endgame-message");
   const paraError = document.querySelector(".error-message");
 
@@ -138,7 +138,7 @@
       if (winner === "tie") {
         paraVictoryMessage.textContent = "The game ended in a tie";
       } else {
-        paraVictoryMessage.textContent = `Congratulations, ${winner.getPlayerName()} has won!`;
+        paraVictoryMessage.textContent = `Congratulations! ${winner.getPlayerName()} has won!`;
       }
     }
 

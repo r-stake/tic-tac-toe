@@ -9,7 +9,6 @@
   flex-direction: column;
   max-width: 800px;
   background-color: lightgray;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,8 +21,9 @@
   grid-template-rows: repeat(3, 190px);
 }
 
-.gameboard div {
+.gameboard button {
   border: 1px solid black;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
