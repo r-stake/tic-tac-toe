@@ -1,10 +1,11 @@
 (() => {
   // Cache DOM elements
   const gameboardElementArray = document.querySelectorAll(".gameboard div");
+  const paraVictoryMessage = document.querySelector(".endgame-message");
+  const paraError = document.querySelector(".error-message");
 
 
-  // Create object to store the gameboard array and functions for displaying gameboard and changing arrays values
-
+  // Gameboard module
   const gameBoard = (() => {
 
     const rows = 3;
@@ -18,23 +19,35 @@
       }
     }
 
-    // Function for displaying board array values on the DOM
+    // Display board array values on the DOM
     function renderBoard() {
       for (k = 0; k < gameboardElementArray.length; k++) {
         const i = Math.floor(k / columns);
         const j = k % columns;
         gameboardElementArray[k].textContent = board[i][j];
       }
+      // Style player marks
+      gameboardElementArray.forEach(cell => {
+        if (cell.textContent === "X") {
+          cell.classList.add("player-one");
+        } else if (cell.textContent === "O") {
+          cell.classList.add("player-two");
+        }
+      })
     };
 
-    // Function for adding player markers to the gameboard array
+    // Add player markers to the gameboard array
     function updateArray(event) {
       const dataRow = event.getAttribute("data-row");
       const dataColumn = event.getAttribute("data-column");
       if (board[dataRow][dataColumn] === "") {
 
         board[dataRow][dataColumn] = currentPlayer.getPlayerMarker();
+        // When the move is valid, return true
+        return true;
       }
+      // When the move is invalid, return false
+      return false;
     };
 
     return {board, updateArray, renderBoard};
@@ -68,20 +81,8 @@
         currentPlayer = playerOne;
       }
     }
-    
-    // Function used for adding players mark to the HTML elements and the gameboard array
-    function addMark(item) {
-      if (item.textContent === "") {
-        const currentPlayerMarker = currentPlayer.getPlayerMarker();
-        item.textContent = currentPlayerMarker;
-        item.classList.add(`${currentPlayer.getPlayerIdentifier()}`);
-        
-            console.log(gameBoard.board);
-            console.log(item);
-      }
-    }
 
-    // Function for checking if the game is over
+    // Check if the game is over
     function checkForGameOver(player) {
       const playerMark = player.getPlayerMarker();
 
@@ -135,49 +136,52 @@
 
     function announceWinner(winner) {
       if (winner === "tie") {
-        console.log(`The game ended in a tie.`);
+        paraVictoryMessage.textContent = "The game ended in a tie";
       } else {
-        console.log(`Congratulations, ${winner.getPlayerName()} has won!`);
+        paraVictoryMessage.textContent = `Congratulations, ${winner.getPlayerName()} has won!`;
       }
     }
 
-    // Function used to initialize new game
+    // Start a new game
     function startGame() {
-      gameBoard.renderBoard();
       eventHandler.addEventListeners();
     }
 
-    return {trackCurrentPlayer, addMark, checkForGameOver, announceWinner, startGame};
+    return {trackCurrentPlayer, checkForGameOver, announceWinner, startGame};
 
   })();
 
   // Module for event handler functions
   const eventHandler = (() => {
-
-    // Function to add event listeners for clicking the gameboard
+    // Add 'click' event listeners to the gameboard
     function addEventListeners() {
       gameboardElementArray.forEach(item => {
         item.addEventListener("click", handleClick);
       });
     }
 
-    // Function to remove event listeners from the gameboard
+    // Remove 'click' event listeners from the gameboard
     function removeEventListeners() {
       gameboardElementArray.forEach(item => {
         item.removeEventListener("click", handleClick);
       });
     }
 
+    // Actions that happen when 'click' event is activated
     function handleClick(event) {
       const item = event.target;
-      game.addMark(item);
-      gameBoard.updateArray(item);
-      let winner = game.checkForGameOver(currentPlayer);
-      if (winner) {
-        game.announceWinner(winner);
-        removeEventListeners();
+      const validMove = gameBoard.updateArray(item);
+      gameBoard.renderBoard();
+      if (validMove) {
+        let winner = game.checkForGameOver(currentPlayer);
+        if (winner) {
+          game.announceWinner(winner);
+          removeEventListeners();
+        }
+        game.trackCurrentPlayer();
+      } else {
+        paraError.textContent = "Illegal move. Cell is already occupied. Choose an unoccupied cell."
       }
-      game.trackCurrentPlayer();
     }
 
     return {addEventListeners, removeEventListeners, handleClick}
