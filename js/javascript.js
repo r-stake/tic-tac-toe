@@ -1,9 +1,11 @@
 (() => {
   // Cache DOM elements
   const gameboardElementArray = document.querySelectorAll(".gameboard button");
-  const paraVictoryMessage = document.querySelector(".endgame-message");
+  const paraDisplayCurrentPlayer = document.querySelector(".current-player");
+  const paraEndgameMessage = document.querySelector(".endgame-message");
   const paraError = document.querySelector(".error-message");
-
+  const spanPlayerOne = document.querySelector("span.player-one");
+  const spanPlayerTwo = document.querySelector("span.player-two");
 
   // Gameboard module
   const gameBoard = (() => {
@@ -70,6 +72,63 @@
 
   let currentPlayer = playerOne;
 
+  // Module for user interface
+  const userInterface = (() => {
+
+    function announceWinner(player) {
+      // Create message
+      if (player === "tie") {
+        paraEndgameMessage.textContent = "The game ended in a tie";
+      } else {
+        paraEndgameMessage.innerHTML = `Congratulations! <span></span> has won!`;
+      }
+
+      // Create a reference to a span element withing endgame message, display players name and style it with players color
+      const spanWinner = document.querySelector(".endgame-message span");
+      displayName(spanWinner);
+    }
+
+    // Displays names of the players that are currently playing the game
+    function displayPlayerNames() {
+      spanPlayerOne.textContent = playerOne.getPlayerName();
+      spanPlayerTwo.textContent = playerTwo.getPlayerName();
+    }
+
+    function displayCurrentPlayer() {
+      // Create a message showing who's turn it is
+      paraDisplayCurrentPlayer.innerHTML = `<span></span>'s turn`;
+      // Create a reference to the span element within the message
+      const spanDisplayCurrentPlayer = document.querySelector(".current-player span");
+      displayName(spanDisplayCurrentPlayer);
+    }
+
+
+    // Display player name and style it with players color
+    function displayName(element) {
+      element.textContent = `${currentPlayer.getPlayerName()}`;
+      element.classList.add(currentPlayer.getPlayerIdentifier());
+    }
+
+    function displayErrorMessage(condition) {
+      if (!condition) {
+        paraError.textContent = "Illegal move. Cell is already occupied. Choose an unoccupied cell."
+      }   
+    }
+
+    function displayUI() {
+      displayCurrentPlayer();
+      displayPlayerNames();
+    }
+
+    function updateUI() {
+      displayCurrentPlayer();
+      // Reset error message
+      paraError.textContent = "";
+    }
+
+    return {announceWinner, displayErrorMessage, displayUI, updateUI};
+  })();
+
 
   // Module for game management
   const game = (() => {
@@ -134,20 +193,13 @@
       }
     }
 
-    function announceWinner(winner) {
-      if (winner === "tie") {
-        paraVictoryMessage.textContent = "The game ended in a tie";
-      } else {
-        paraVictoryMessage.textContent = `Congratulations! ${winner.getPlayerName()} has won!`;
-      }
-    }
-
     // Start a new game
     function startGame() {
       eventHandler.addEventListeners();
+      userInterface.displayUI();
     }
 
-    return {trackCurrentPlayer, checkForGameOver, announceWinner, startGame};
+    return {trackCurrentPlayer, checkForGameOver, startGame};
 
   })();
 
@@ -170,21 +222,26 @@
     // Actions that happen when 'click' event is activated
     function handleClick(event) {
       const item = event.target;
+
       const validMove = gameBoard.updateArray(item);
       gameBoard.renderBoard();
       if (validMove) {
         let winner = game.checkForGameOver(currentPlayer);
         if (winner) {
-          game.announceWinner(winner);
+          userInterface.announceWinner(winner);
           removeEventListeners();
+          // Remove current player from the UI when the game is over
+          paraDisplayCurrentPlayer.remove();
+        } else {
+          game.trackCurrentPlayer();
+          userInterface.updateUI();
         }
-        game.trackCurrentPlayer();
       } else {
-        paraError.textContent = "Illegal move. Cell is already occupied. Choose an unoccupied cell."
+        userInterface.displayErrorMessage(validMove);
       }
     }
 
-    return {addEventListeners, removeEventListeners, handleClick}
+    return {addEventListeners, handleClick}
 
   })();
 

@@ -10,6 +10,10 @@
 </head>
 <body>
   <div class="container">
+    <div class="user-interface-top">
+      <p class="current-player"></p>
+      <p class="endgame-message"></p>
+    </div>
     <div class="gameboard">
       <button data-row="0" data-column="0"></button>
       <button data-row="0" data-column="1"></button>
@@ -21,15 +25,15 @@
       <button data-row="2" data-column="1"></button>
       <button data-row="2" data-column="2"></button>
     </div>
-    <div class="user-interface">
-      <div class="current-players"></div>
-      <p>
+    <div class="user-interface-bottom">
+      <div class="players">
         <span class="player-one">a</span>
-        <span>vs.</span>
+        <span class="vs">VS</span>
         <span class="player-two">b</span>
-      </p>
-      <p class="error-message"></p>
-      <p class="endgame-message"></p>
+      </div>
+      <div>
+        <p class="error-message"></p>
+      </div>
     </div>
   </div>
 </body>
