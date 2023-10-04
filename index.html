@@ -17,10 +17,10 @@
   </header>
   <form action="">
     <div class="player-one-data">
-      <input type="text" placeholder="Player one" autofocus>
+      <input id="player-one-name" type="text" placeholder="Player one" autofocus autocomplete="off">
     </div>
     <div class="player-two-data">
-      <input type="text" placeholder="Player-two">
+      <input id="player-two-name" type="text" placeholder="Player-two" autocomplete="off">
     </div>
     <button type="button" class="start-game">Start game</button>
   </form>
@@ -42,9 +42,9 @@
     </div>
     <div class="user-interface-bottom">
       <div class="players">
-        <span class="player-one">a</span>
+        <span class="player-one"></span>
         <span class="vs">VS</span>
-        <span class="player-two">b</span>
+        <span class="player-two"></span>
       </div>
       <div class="messages">
         <p class="error-message"></p>

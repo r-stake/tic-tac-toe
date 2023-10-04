@@ -40,7 +40,7 @@ form button {
 
 .container {
   flex-direction: column;
-  width: 800px;
+  width: 1000px;
   justify-content: center;
   align-items: center;
   margin: 0 auto;

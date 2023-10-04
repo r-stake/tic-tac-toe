@@ -10,6 +10,14 @@
   const btnStartGame = document.querySelector(".start-game");
   const boardContainer = document.querySelector(".container");
   const btnRestartGame = document.querySelector(".restart");
+  const inputPlayerOne = document.getElementById("player-one-name");
+  const inputPlayerTwo = document.getElementById("player-two-name");
+
+  // Create an object to store new players
+  const players = {
+    playerOne: null,
+    playerTwo: null,
+  }
 
   // Gameboard module
   const gameBoard = (() => {
@@ -43,7 +51,6 @@
           cell.classList.add("player-two");
         }
       });
-      console.log(board);
     };
 
     // Add player markers to the gameboard array
@@ -66,7 +73,7 @@
   })();
 
 
-
+  const playerModule = (() => {
   // Factory function for creating players
   const Player = (name, marker, identifier) => {
     const getPlayerIdentifier = () => identifier;
@@ -75,12 +82,19 @@
     return {getPlayerMarker, getPlayerName, getPlayerIdentifier}
   };
 
+  function createPlayers() {
+    const playerOneName = inputPlayerOne.value || "Player One";
+    const playerTwoName = inputPlayerTwo.value || "Player Two";
+    players.playerOne = Player(playerOneName, "X", "player-one");
+    players.playerTwo = Player(playerTwoName, "O", "player-two");
+  }
+
+  return {createPlayers}
+
+  })();
 
 
-  const playerOne = Player("Mr. Pink", "X", "player-one");
-  const playerTwo = Player("Mr. Yellow", "O", "player-two");
-
-  let currentPlayer = playerOne;
+  let currentPlayer;
 
   let eventListenersRemoved = false;
 
@@ -102,8 +116,8 @@
 
     // Displays names of the players that are currently playing the game
     function displayPlayerNames() {
-      spanPlayerOne.textContent = playerOne.getPlayerName();
-      spanPlayerTwo.textContent = playerTwo.getPlayerName();
+      spanPlayerOne.textContent = players.playerOne.getPlayerName();
+      spanPlayerTwo.textContent = players.playerTwo.getPlayerName();
     }
 
     function displayCurrentPlayer() {
@@ -167,10 +181,10 @@
   const game = (() => {
 
     function trackCurrentPlayer() {
-      if (currentPlayer === playerOne) {
-        currentPlayer = playerTwo;
+      if (currentPlayer === players.playerOne) {
+        currentPlayer = players.playerTwo;
       } else {
-        currentPlayer = playerOne;
+        currentPlayer = players.playerOne;
       }
     }
 
@@ -228,6 +242,8 @@
 
     // Start a new game
     function startGame() {
+      playerModule.createPlayers();
+      currentPlayer = players.playerOne;
       userInterface.toggleForm();
       userInterface.toggleGameBoard();
       eventHandler.addEventListeners();
@@ -236,7 +252,7 @@
 
     function restartGame() {
       gameBoard.resetBoard();
-      currentPlayer = playerOne;
+      currentPlayer = players.playerOne;
       gameBoard.renderBoard();
       userInterface.displayUI();
       userInterface.updateUI();
@@ -301,7 +317,5 @@
 
   btnStartGame.addEventListener("click", game.startGame);
   btnRestartGame.addEventListener("click", game.restartGame);
-
-  // game.startGame();
 
 })();
