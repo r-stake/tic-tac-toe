@@ -5,20 +5,36 @@
 }
 
 body {
-  height: 800px;
-  display: flex;
-  align-items: center;
+  font-family: sans-serif;
+  background-color: #fff5ee;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   width: 800px;
-  background-color: lightgray;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+}
+
+header {
+  background-color: #f0f8ff;
+}
+
+header h1 {
+  margin: 0;
+  box-shadow: 0 3px 3px rgb(92, 92, 92);
+  padding: 2rem 0;
+  width: 100vw;
+  text-align: center;
+  font-size: 4rem;
+}
+
+.user-interface-top {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 .gameboard {
@@ -34,6 +50,7 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 5rem;
+  background-color: #fffafa;
 }
 
 .player-one {
