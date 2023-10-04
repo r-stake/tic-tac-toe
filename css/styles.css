@@ -9,6 +9,37 @@ body {
   background-color: #fff5ee;
 }
 
+form {
+  display: grid;
+  grid-auto-rows: repeat(3, 1fr);
+  justify-content: center;
+  /* width: 50%; */
+  margin-top: 8rem;
+  gap: 75px;
+}
+
+form input {
+  padding: 10px;
+  width: 500px;
+  font-size: 2rem;
+  border-radius: 10px;
+  border: 1px solid black;
+  /* width: 50%; */
+}
+
+form input:focus {
+  outline-color: blue;
+}
+
+form button {
+  width: 200px;
+  padding: 10px;
+  font-size: 2rem;
+  background-color: blueviolet;
+  color: white;
+  justify-self: center;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -17,6 +48,7 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  display: none;
 }
 
 header {
@@ -37,10 +69,15 @@ header h1 {
   margin-bottom: 1rem;
 }
 
+.user-interface-top p {
+  margin: 0;
+}
+
 .gameboard {
   display: grid;
-  grid-template-columns: repeat(3, 190px);
-  grid-template-rows: repeat(3, 190px);
+  grid-template-columns: repeat(3, 150px);
+  grid-template-rows: repeat(3, 150px);
+  box-shadow: 3px 3px 10px rgb(92, 92, 92);
 }
 
 .gameboard button {
@@ -64,14 +101,45 @@ header h1 {
 .user-interface-top .current-player,
 .user-interface-top .endgame-message {
   font-size: 3rem;
-  margin: 0.5rem auto;
 }
 
 .user-interface-bottom {
   display: grid;
   grid-template-rows: repeat(3, 40px);
   place-items: center;
-  margin-top: 1rem;
+  margin-top: 2rem;
+}
+
+.user-interface-bottom .players {
+  grid-row: 1 / 2;
+}
+
+.user-interface-bottom .messages {
+  grid-row: 2 / 3;
+}
+
+.user-interface-bottom .controls {
+  grid-row: 3 / 4;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.user-interface-bottom button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: blueviolet;
+  color: white;
+}
+
+.user-interface-bottom .restart {
+  grid-column: 1 / 2;
+}
+
+.user-interface-bottom .new-game {
+  grid-column: 2 / 3;
 }
 
 .user-interface-bottom .error-message {

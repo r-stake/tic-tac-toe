@@ -15,6 +15,15 @@
   <header>
     <h1>Tic-Tac-Toe</h1>
   </header>
+  <form action="">
+    <div class="player-one-data">
+      <input type="text" placeholder="Player one" autofocus>
+    </div>
+    <div class="player-two-data">
+      <input type="text" placeholder="Player-two">
+    </div>
+    <button>Start game</button>
+  </form>
   <div class="container">
     <div class="user-interface-top">
       <p class="current-player"></p>
@@ -37,8 +46,12 @@
         <span class="vs">VS</span>
         <span class="player-two">b</span>
       </div>
-      <div>
+      <div class="messages">
         <p class="error-message"></p>
+      </div>
+      <div class="controls">
+        <button class="restart">Restart</button>
+        <button class="new-game">New Game</button>
       </div>
     </div>
   </div>
