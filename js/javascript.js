@@ -6,6 +6,10 @@
   const paraError = document.querySelector(".error-message");
   const spanPlayerOne = document.querySelector("span.player-one");
   const spanPlayerTwo = document.querySelector("span.player-two");
+  const form = document.querySelector("form");
+  const btnStartGame = document.querySelector(".start-game");
+  const boardContainer = document.querySelector(".container");
+  const btnRestartGame = document.querySelector(".restart");
 
   // Gameboard module
   const gameBoard = (() => {
@@ -14,10 +18,13 @@
     const columns = 3;
     const board = [];
 
-    for (let i = 0; i < rows; i++) {
-      board[i] = [];
-      for (let j = 0; j < columns; j++) {
-        board[i].push("");
+    // Reset game board values
+    function resetBoard() {
+      for (let i = 0; i < rows; i++) {
+        board[i] = [];
+        for (let j = 0; j < columns; j++) {
+          board[i].push("");
+        }
       }
     }
 
@@ -35,7 +42,8 @@
         } else if (cell.textContent === "O") {
           cell.classList.add("player-two");
         }
-      })
+      });
+      console.log(board);
     };
 
     // Add player markers to the gameboard array
@@ -52,7 +60,9 @@
       return false;
     };
 
-    return {board, updateArray, renderBoard};
+    resetBoard();
+
+    return {board, updateArray, renderBoard, resetBoard};
   })();
 
 
@@ -71,6 +81,8 @@
   const playerTwo = Player("Mr. Yellow", "O", "player-two");
 
   let currentPlayer = playerOne;
+
+  let eventListenersRemoved = false;
 
   // Module for user interface
   const userInterface = (() => {
@@ -118,6 +130,10 @@
     function displayUI() {
       displayCurrentPlayer();
       displayPlayerNames();
+      if (paraDisplayCurrentPlayer.style.display === "none") {
+        paraDisplayCurrentPlayer.style.display = "block";
+      }
+      paraEndgameMessage.textContent = "";
     }
 
     function updateUI() {
@@ -126,7 +142,24 @@
       paraError.textContent = "";
     }
 
-    return {announceWinner, displayErrorMessage, displayUI, updateUI};
+    function toggleForm() {
+      if (form.style.display === "none") {
+        form.style.display = "block";
+      } else {
+        form.style.display = "none";
+      }
+    }
+
+    function toggleGameBoard() {
+      if (boardContainer.style.display === "") {
+        boardContainer.style.display = "flex";
+      } else {
+        console.log(boardContainer.style);
+        boardContainer.style.display = "none";
+      }
+    }
+
+    return {announceWinner, displayErrorMessage, displayUI, updateUI, toggleForm, toggleGameBoard};
   })();
 
 
@@ -195,21 +228,41 @@
 
     // Start a new game
     function startGame() {
+      userInterface.toggleForm();
+      userInterface.toggleGameBoard();
       eventHandler.addEventListeners();
       userInterface.displayUI();
     }
 
-    return {trackCurrentPlayer, checkForGameOver, startGame};
+    function restartGame() {
+      gameBoard.resetBoard();
+      currentPlayer = playerOne;
+      gameBoard.renderBoard();
+      userInterface.displayUI();
+      userInterface.updateUI();
+      gameboardElementArray.forEach(cell => {
+        cell.classList.remove("player-one", "player-two");
+      });
+      
+      if (eventListenersRemoved) {
+        eventHandler.addEventListeners();
+      }
+    }
+
+    return {trackCurrentPlayer, checkForGameOver, startGame, restartGame};
 
   })();
 
   // Module for event handler functions
   const eventHandler = (() => {
+
     // Add 'click' event listeners to the gameboard
     function addEventListeners() {
       gameboardElementArray.forEach(item => {
         item.addEventListener("click", handleClick);
+        item.dataset.listener = "true";
       });
+      eventListenersRemoved = false;
     }
 
     // Remove 'click' event listeners from the gameboard
@@ -217,6 +270,7 @@
       gameboardElementArray.forEach(item => {
         item.removeEventListener("click", handleClick);
       });
+      eventListenersRemoved = true;
     }
 
     // Actions that happen when 'click' event is activated
@@ -231,7 +285,7 @@
           userInterface.announceWinner(winner);
           removeEventListeners();
           // Remove current player from the UI when the game is over
-          paraDisplayCurrentPlayer.remove();
+          paraDisplayCurrentPlayer.style.display = "none"
         } else {
           game.trackCurrentPlayer();
           userInterface.updateUI();
@@ -241,10 +295,13 @@
       }
     }
 
-    return {addEventListeners, handleClick}
+    return {addEventListeners, handleClick, eventListenersRemoved}
 
   })();
 
-  game.startGame();
+  btnStartGame.addEventListener("click", game.startGame);
+  btnRestartGame.addEventListener("click", game.restartGame);
+
+  // game.startGame();
 
 })();

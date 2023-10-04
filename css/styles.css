@@ -13,7 +13,6 @@ form {
   display: grid;
   grid-auto-rows: repeat(3, 1fr);
   justify-content: center;
-  /* width: 50%; */
   margin-top: 8rem;
   gap: 75px;
 }
@@ -24,7 +23,6 @@ form input {
   font-size: 2rem;
   border-radius: 10px;
   border: 1px solid black;
-  /* width: 50%; */
 }
 
 form input:focus {
@@ -41,10 +39,8 @@ form button {
 }
 
 .container {
-  display: flex;
   flex-direction: column;
   width: 800px;
-  display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
