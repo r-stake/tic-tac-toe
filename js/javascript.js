@@ -1,6 +1,6 @@
 (() => {
   // Cache DOM elements
-  const boardCells = document.querySelectorAll(".gameboard button");
+  const gameBoardCells = document.querySelectorAll(".gameboard button");
   const paraDisplayCurrentPlayer = document.querySelector(".current-player");
   const paraEndgameMessage = document.querySelector(".endgame-message");
   const paraError = document.querySelector(".error-message");
@@ -39,13 +39,13 @@
 
     // Display board array values on the DOM
     function renderBoard() {
-      for (k = 0; k < boardCells.length; k++) {
+      for (k = 0; k < gameBoardCells.length; k++) {
         const i = Math.floor(k / columns);
         const j = k % columns;
-        boardCells[k].textContent = board[i][j];
+        gameBoardCells[k].textContent = board[i][j];
       }
       // Style player marks
-      boardCells.forEach(cell => {
+      gameBoardCells.forEach(cell => {
         if (cell.textContent === "X") {
           cell.classList.add("player-one");
         } else if (cell.textContent === "O") {
@@ -180,7 +180,7 @@
   // Module for game management
   const game = (() => {
 
-    function trackCurrentPlayer() {
+    function switchCurrentPlayer() {
       if (currentPlayer === players.playerOne) {
         currentPlayer = players.playerTwo;
       } else {
@@ -231,7 +231,7 @@
       }
 
       // Check for a tie
-      const noLegalMoves = Array.from(boardCells).every(element => {
+      const noLegalMoves = Array.from(gameBoardCells).every(element => {
         return element.textContent !== "";
       });
 
@@ -258,7 +258,7 @@
       gameBoard.renderBoard();
       userInterface.displayUI();
       userInterface.updateUI();
-      boardCells.forEach(cell => {
+      gameBoardCells.forEach(cell => {
         cell.classList.remove("player-one", "player-two");
       });
       
@@ -273,7 +273,7 @@
       userInterface.toggleForm();
     }
 
-    return {trackCurrentPlayer, checkForGameOver, startGame, restartGame, newGame};
+    return {switchCurrentPlayer, checkForGameOver, startGame, restartGame, newGame};
 
   })();
 
@@ -282,7 +282,7 @@
 
     // Add 'click' event listeners to the gameboard
     function addEventListeners() {
-      boardCells.forEach(item => {
+      gameBoardCells.forEach(item => {
         item.addEventListener("click", handleClick);
         item.dataset.listener = "true";
       });
@@ -291,7 +291,7 @@
 
     // Remove 'click' event listeners from the gameboard
     function removeEventListeners() {
-      boardCells.forEach(item => {
+      gameBoardCells.forEach(item => {
         item.removeEventListener("click", handleClick);
       });
       eventListenersRemoved = true;
@@ -311,7 +311,7 @@
           // Remove current player from the UI when the game is over
           paraDisplayCurrentPlayer.style.display = "none"
         } else {
-          game.trackCurrentPlayer();
+          game.switchCurrentPlayer();
           userInterface.updateUI();
         }
       } else {
