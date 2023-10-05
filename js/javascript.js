@@ -1,6 +1,6 @@
 (() => {
   // Cache DOM elements
-  const gameboardElementArray = document.querySelectorAll(".gameboard button");
+  const boardCells = document.querySelectorAll(".gameboard button");
   const paraDisplayCurrentPlayer = document.querySelector(".current-player");
   const paraEndgameMessage = document.querySelector(".endgame-message");
   const paraError = document.querySelector(".error-message");
@@ -10,6 +10,7 @@
   const btnStartGame = document.querySelector(".start-game");
   const boardContainer = document.querySelector(".container");
   const btnRestartGame = document.querySelector(".restart");
+  const btnNewGame = document.querySelector(".new-game");
   const inputPlayerOne = document.getElementById("player-one-name");
   const inputPlayerTwo = document.getElementById("player-two-name");
 
@@ -38,13 +39,13 @@
 
     // Display board array values on the DOM
     function renderBoard() {
-      for (k = 0; k < gameboardElementArray.length; k++) {
+      for (k = 0; k < boardCells.length; k++) {
         const i = Math.floor(k / columns);
         const j = k % columns;
-        gameboardElementArray[k].textContent = board[i][j];
+        boardCells[k].textContent = board[i][j];
       }
       // Style player marks
-      gameboardElementArray.forEach(cell => {
+      boardCells.forEach(cell => {
         if (cell.textContent === "X") {
           cell.classList.add("player-one");
         } else if (cell.textContent === "O") {
@@ -158,7 +159,7 @@
 
     function toggleForm() {
       if (form.style.display === "none") {
-        form.style.display = "block";
+        form.style.display = "grid";
       } else {
         form.style.display = "none";
       }
@@ -168,8 +169,7 @@
       if (boardContainer.style.display === "") {
         boardContainer.style.display = "flex";
       } else {
-        console.log(boardContainer.style);
-        boardContainer.style.display = "none";
+        boardContainer.style.display = "";
       }
     }
 
@@ -231,7 +231,7 @@
       }
 
       // Check for a tie
-      const noLegalMoves = Array.from(gameboardElementArray).every(element => {
+      const noLegalMoves = Array.from(boardCells).every(element => {
         return element.textContent !== "";
       });
 
@@ -244,6 +244,8 @@
     function startGame() {
       playerModule.createPlayers();
       currentPlayer = players.playerOne;
+      inputPlayerOne.value = "";
+      inputPlayerTwo.value = "";
       userInterface.toggleForm();
       userInterface.toggleGameBoard();
       eventHandler.addEventListeners();
@@ -256,7 +258,7 @@
       gameBoard.renderBoard();
       userInterface.displayUI();
       userInterface.updateUI();
-      gameboardElementArray.forEach(cell => {
+      boardCells.forEach(cell => {
         cell.classList.remove("player-one", "player-two");
       });
       
@@ -265,7 +267,13 @@
       }
     }
 
-    return {trackCurrentPlayer, checkForGameOver, startGame, restartGame};
+    function newGame() {
+      restartGame();
+      userInterface.toggleGameBoard();
+      userInterface.toggleForm();
+    }
+
+    return {trackCurrentPlayer, checkForGameOver, startGame, restartGame, newGame};
 
   })();
 
@@ -274,7 +282,7 @@
 
     // Add 'click' event listeners to the gameboard
     function addEventListeners() {
-      gameboardElementArray.forEach(item => {
+      boardCells.forEach(item => {
         item.addEventListener("click", handleClick);
         item.dataset.listener = "true";
       });
@@ -283,7 +291,7 @@
 
     // Remove 'click' event listeners from the gameboard
     function removeEventListeners() {
-      gameboardElementArray.forEach(item => {
+      boardCells.forEach(item => {
         item.removeEventListener("click", handleClick);
       });
       eventListenersRemoved = true;
@@ -317,5 +325,6 @@
 
   btnStartGame.addEventListener("click", game.startGame);
   btnRestartGame.addEventListener("click", game.restartGame);
+  btnNewGame.addEventListener("click", game.newGame)
 
 })();
